@@ -8,6 +8,7 @@
     <title>{% block title %}{% endblock %}</title>
 </head>
 <body>
+{% block relbar1 %}{% endblock %}
 <div class="document">
     <div class="documentwrapper">
         <div class="bodywrapper">
@@ -18,5 +19,7 @@
     </div>
 </div>
 {% block sidebar %}{% endblock %}
+<div class="clearer"></div>
+{% block relbar2 %}{% endblock %}
 </body>
 </html>
