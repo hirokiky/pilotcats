@@ -59,11 +59,16 @@ class DocumentResource(object):
         except (docstore.DocumentWasNotStored, DocumentNotFoundError):
             raise NotFound
 
+    @property
+    def docglobal(self):
+        return docstore.get_docstore()[self.request.matchdict['docname']].get_globalcontext()
+
 
 @view_config(route_name='doc',
              renderer='doc.jinja2')
 def doc_view(request):
-    return dict(document=request.context.document)
+    return dict(document=request.context.document,
+                docglobal=request.context.docglobal)
 
 
 @view_config(route_name='admin',
