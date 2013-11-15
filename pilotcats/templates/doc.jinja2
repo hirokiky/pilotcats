@@ -1,7 +1,7 @@
 {% extends 'base.jinja2' %}
-{% block staticfiles %}
+{% block title %}{{ document.title }}{% endblock %}
+{% block css %}
     {{ super() }}
-    {{ docglobal.css|safe }}
     {{ document.css|safe }}
 {% endblock %}
 {% block relbar1 %}

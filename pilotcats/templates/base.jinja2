@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    {% block staticfiles %}
+    {% block css %}
     {% endblock %}
     <title>{% block title %}{% endblock %}</title>
 </head>
@@ -22,5 +22,7 @@
 <div class="clearer"></div>
 {% block relbar2 %}{% endblock %}
 {% block footer %}{% endblock %}
+{% block script %}
+{% endblock %}
 </body>
 </html>
