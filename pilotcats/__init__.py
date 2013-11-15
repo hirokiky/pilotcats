@@ -10,11 +10,18 @@ def main(global_config, **settings):
     """ This function returns a Pyramid WSGI application.
     """
     config = Configurator(settings=settings)
+    config.add_route('top', '/')
     config.add_route('doc', '/{docname}/{docpath:.*}',
                      factory=DocumentResource)
     config.scan('.')
     docstore.setup_docstore(settings['pilotcats.storedir'])
     return config.make_wsgi_app()
+
+
+@view_config(route_name='top',
+             renderer='top.jinja2')
+def top_view(request):
+    return dict(docnames=docstore.get_docstore().docnames)
 
 
 class DocumentResource(object):

@@ -1,3 +1,4 @@
-<html>
-{{ document.body|safe }}
-</html>
+{% extends 'base.jinja2' %}
+{% block body %}
+    {{ document.body|safe }}
+{% endblock %}

@@ -1,0 +1,8 @@
+{% extends 'base.jinja2' %}
+{% block body %}
+    <ul>
+    {% for docname in docnames %}
+        <li><a href="{{ request.route_url('doc', docname=docname, docpath='') }}">{{ docname }}</a></li>
+    {% endfor %}
+    </ul>
+{% endblock %}

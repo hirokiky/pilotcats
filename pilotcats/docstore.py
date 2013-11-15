@@ -41,3 +41,7 @@ class DocStore(object):
             return WebSupport(srcdir, builddir)
         else:
             raise DocumentWasNotStored
+
+    @property
+    def docnames(self):
+        return os.listdir(self.storedir)
