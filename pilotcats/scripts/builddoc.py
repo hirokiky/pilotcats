@@ -5,13 +5,12 @@ from pyramid.paster import (
     setup_logging,
 )
 
-from pilotcats import setup_docsupport, get_docsupport
+from pilotcats import docstore
 
 
 def main(argv=sys.argv):
     config_uri = argv[1]
     setup_logging(config_uri)
     settings = get_appsettings(config_uri)
-    setup_docsupport(settings['pilotcats.srcdir'],
-                     settings['pilotcats.builddir'])
-    get_docsupport().build()
+    docstore.setup_docstore(settings['pilotcats.storedir'])
+    docstore.get_docstore()[argv[2]].build()
