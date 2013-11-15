@@ -42,7 +42,8 @@ class DocStore(object):
         if os.path.exists(target_doc_dir):
             srcdir = os.path.join(target_doc_dir, self.sourcepath)
             builddir = os.path.join(target_doc_dir, self.buildpath)
-            return WebSupport(srcdir, builddir)
+            return WebSupport(srcdir, builddir,
+                              staticroot='static/%s' % item)
         else:
             raise DocumentWasNotStored
 
@@ -52,6 +53,13 @@ class DocStore(object):
 
     def get_source(self, dirname):
         return DirResource(os.path.join(self.storedir, dirname, self.sourcepath))
+
+    def get_staticdir(self, docname):
+        static_dir = os.path.join(self.storedir, docname, self.buildpath, 'static/_static')
+        if os.path.exists(static_dir) and os.path.isdir(static_dir):
+            return static_dir
+        else:
+            raise DocumentWasNotStored
 
 
 class DirResource(object):

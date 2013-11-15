@@ -1,5 +1,6 @@
 from pyramid.config import Configurator
 from pyramid.exceptions import NotFound
+from pyramid.static import static_view
 from pyramid.view import view_config
 from sphinx.websupport.errors import DocumentNotFoundError
 
@@ -11,6 +12,8 @@ def main(global_config, **settings):
     """
     config = Configurator(settings=settings)
     config.add_route('top', '/')
+    config.add_route('static', '/static/{docname}/_static/*subpath',
+                     factory=StaticFileResource)
     config.add_route('admin', '/admin/{docname}/*traverse',
                      factory='pilotcats.docstore.source_root_factory')
     config.add_route('doc', '/docs/{docname}/{docpath:.*}',
@@ -18,6 +21,24 @@ def main(global_config, **settings):
     config.scan('.')
     docstore.setup_docstore(settings['pilotcats.storedir'])
     return config.make_wsgi_app()
+
+
+class StaticFileResource(object):
+    def __init__(self, request):
+        self.request = request
+
+    @property
+    def static_dir_path(self):
+        try:
+            return docstore.get_docstore().get_staticdir(self.request.matchdict['docname'])
+        except docstore.DocumentWasNotStored:
+            raise NotFound
+
+
+@view_config(route_name='static')
+def doc_static_view(request):
+    docstore.get_docstore().get_staticdir(request.matchdict['docname'])
+    return static_view(request.context.static_dir_path, use_subpath=True)(request.context, request)
 
 
 @view_config(route_name='top',
