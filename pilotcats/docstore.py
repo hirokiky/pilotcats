@@ -54,8 +54,8 @@ class DocStore(object):
     def get_source(self, dirname):
         return DirResource(os.path.join(self.storedir, dirname, self.sourcepath))
 
-    def get_staticdir(self, docname):
-        static_dir = os.path.join(self.storedir, docname, self.buildpath, 'static/_static')
+    def get_staticdir(self, docname, filetype):
+        static_dir = os.path.join(self.storedir, docname, self.buildpath, 'static', filetype)
         if os.path.exists(static_dir) and os.path.isdir(static_dir):
             return static_dir
         else:

@@ -12,7 +12,7 @@ def main(global_config, **settings):
     """
     config = Configurator(settings=settings)
     config.add_route('top', '/')
-    config.add_route('static', '/static/{docname}/_static/*subpath',
+    config.add_route('static', '/static/{docname}/{filetype:_static|_sources}/*subpath',
                      factory=StaticFileResource)
     config.add_route('admin', '/admin/{docname}/*traverse',
                      factory='pilotcats.docstore.source_root_factory')
@@ -30,14 +30,14 @@ class StaticFileResource(object):
     @property
     def static_dir_path(self):
         try:
-            return docstore.get_docstore().get_staticdir(self.request.matchdict['docname'])
+            return docstore.get_docstore().get_staticdir(self.request.matchdict['docname'],
+                                                         self.request.matchdict['filetype'])
         except docstore.DocumentWasNotStored:
             raise NotFound
 
 
 @view_config(route_name='static')
 def doc_static_view(request):
-    docstore.get_docstore().get_staticdir(request.matchdict['docname'])
     return static_view(request.context.static_dir_path, use_subpath=True)(request.context, request)
 
 
