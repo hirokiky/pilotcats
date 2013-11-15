@@ -1,0 +1,8 @@
+{% extends 'base.jinja2' %}
+{% block body %}
+    <ul>
+        {% for filename in request.context %}
+            <li><a href="{{ filename }}/">{{ filename }}</a></li>
+        {% endfor %}
+    </ul>
+{% endblock %}

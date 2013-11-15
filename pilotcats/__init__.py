@@ -11,7 +11,9 @@ def main(global_config, **settings):
     """
     config = Configurator(settings=settings)
     config.add_route('top', '/')
-    config.add_route('doc', '/{docname}/{docpath:.*}',
+    config.add_route('admin', '/admin/{docname}/*traverse',
+                     factory='pilotcats.docstore.source_root_factory')
+    config.add_route('doc', '/docs/{docname}/{docpath:.*}',
                      factory=DocumentResource)
     config.scan('.')
     docstore.setup_docstore(settings['pilotcats.storedir'])
@@ -41,3 +43,19 @@ class DocumentResource(object):
              renderer='doc.jinja2')
 def doc_view(request):
     return dict(document=request.context.document)
+
+
+@view_config(route_name='admin',
+             renderer='dirtree.jinja2',
+             context='pilotcats.docstore.DirResource')
+def tree_view(request):
+    return {}
+
+
+@view_config(route_name='admin',
+             renderer='dirfile.jinja2',
+             context='pilotcats.docstore.FileResource')
+def file_view(request):
+    with request.context as f:
+        content = f.read()
+    return dict(content=content)

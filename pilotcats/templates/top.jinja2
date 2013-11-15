@@ -2,7 +2,11 @@
 {% block body %}
     <ul>
     {% for docname in docnames %}
-        <li><a href="{{ request.route_url('doc', docname=docname, docpath='') }}">{{ docname }}</a></li>
+        <li>
+            {{ docname }}
+            <a href="{{ request.route_url('doc', docname=docname, docpath='') }}">doc</a>
+            <a href="{{ request.route_url('admin', docname=docname, traverse='') }}">tree</a>
+        </li>
     {% endfor %}
     </ul>
 {% endblock %}
