@@ -1,7 +1,7 @@
 PilotCats
 =========
 
-An app for writing docs through web.
+Sphinx Web editor.
 
 Web interfaces
 --------------

@@ -12,7 +12,7 @@ setup(
     license='MIT',
     author='hirokiky',
     author_email='hirokiky@gmail.com',
-    description='An app for writing docs through web.',
+    description='Sphinx Web editor',
     long_description=README,
     install_requires=[
         'Sphinx==1.2b3',
