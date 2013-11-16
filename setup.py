@@ -20,6 +20,7 @@ setup(
         'pyramid-jinja2==1.9',
         'SQLAlchemy==0.8.3',
         'waitress==0.8.7',
+        'colander==1.0b1',
     ],
     entry_points="""\
     [paste.app_factory]

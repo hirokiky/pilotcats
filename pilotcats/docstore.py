@@ -2,6 +2,7 @@
 Storing/Providing documentation.
 """
 import os
+import shutil
 
 from sphinx.websupport import WebSupport
 
@@ -84,6 +85,16 @@ class DirResource(object):
         except ValueError:
             return FileResource(filepath)
 
+    def create_doc(self, name, body):
+        with open(os.path.join(self.path, name), 'w') as f:
+            f.write(body)
+
+    def create_dir(self, name):
+        os.mkdir(os.path.join(self.path, name))
+
+    def delete_file(self):
+        shutil.rmtree(self.path)
+
 
 class FileResource(object):
     def __init__(self, path):
@@ -101,3 +112,10 @@ class FileResource(object):
 
     def __getitem__(self, item):
         raise KeyError
+
+    def delete_file(self):
+        os.remove(self.path)
+
+    def update_body(self, body):
+        with open(os.path.join(self.path), 'w') as f:
+            f.write(body)
