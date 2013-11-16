@@ -4,7 +4,10 @@ Storing/Providing documentation.
 import os
 import shutil
 
+from pyramid.exceptions import NotFound
+
 from sphinx.websupport import WebSupport
+from sphinx.websupport.errors import DocumentNotFoundError
 
 
 _docstore = None
@@ -17,14 +20,6 @@ def setup_docstore(storedir):
 
 def get_docstore():
     return _docstore
-
-
-def get_document(docname, path):
-    return get_docstore()[docname].get_document(path)
-
-
-def source_root_factory(request):
-    return get_docstore().get_source(request.matchdict['docname'])
 
 
 class DocumentWasNotStored(Exception):
@@ -119,3 +114,33 @@ class FileResource(object):
     def update_body(self, body):
         with open(os.path.join(self.path), 'w') as f:
             f.write(body)
+
+
+class StaticFileResource(object):
+    def __init__(self, docname, filetype):
+        self.docname = docname
+        self.filetype = filetype
+
+    @property
+    def static_dir_path(self):
+        try:
+            return get_docstore().get_staticdir(self.docname, self.filetype)
+        except DocumentWasNotStored:
+            raise NotFound
+
+
+class DocumentResource(object):
+    def __init__(self, docname, docpath):
+        self.docname = docname
+        self.docpath = docpath
+
+    @property
+    def document(self):
+        try:
+            return get_docstore()[self.docname].get_document(self.docpath)
+        except (DocumentWasNotStored, DocumentNotFoundError):
+            raise NotFound
+
+    @property
+    def docglobal(self):
+        return get_docstore()[self.docname].get_globalcontext()
