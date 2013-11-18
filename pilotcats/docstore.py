@@ -39,7 +39,7 @@ class DocStore(object):
             srcdir = os.path.join(target_doc_dir, self.sourcepath)
             builddir = os.path.join(target_doc_dir, self.buildpath)
             return WebSupport(srcdir, builddir,
-                              staticroot='static/%s' % item)
+                              staticroot='docstatic/%s' % item)
         else:
             raise DocumentWasNotStored
 

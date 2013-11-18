@@ -6,7 +6,7 @@ from pilotcats import docstore
 from pilotcats import schema as pilotcats_schema
 
 
-@view_config(route_name='static')
+@view_config(route_name='docstatic')
 def doc_static_view(request):
     return static_view(request.context.static_dir_path, use_subpath=True)(request.context, request)
 
