@@ -11,7 +11,7 @@ def main(global_config, **settings):
     config.add_route('top', '/')
     config.add_route('docstatic', '/docstatic/{docname}/{filetype:_static|_sources}/*subpath',
                      factory='pilotcats.resources.static_file_resource_factory')
-    config.add_route('admin', '/admin/{docname}/*traverse',
+    config.add_route('api_tree', '/api/tree/{docname}/*traverse',
                      factory='pilotcats.resources.source_root_factory')
     config.add_route('doc', '/docs/{docname}/{docpath:.*}',
                      factory='pilotcats.resources.document_resource_factory')

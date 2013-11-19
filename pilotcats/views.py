@@ -24,7 +24,7 @@ def doc_view(request):
                 docglobal=request.context.docglobal)
 
 
-@view_config(route_name='admin',
+@view_config(route_name='api_tree',
              renderer='json',
              request_method=['POST'],
              context='pilotcats.docstore.DirResource')
@@ -35,51 +35,79 @@ def doc_create_view(request):
     except colander.Invalid as e:
         request.response.status = 400
         return dict(errors=e.asdict())
-    if conditions['type'] == 'doc':
-        request.context.create_doc(conditions['name'] + '.rst',
+
+    filetype = conditions['type']
+    if filetype == 'doc':
+        name = conditions['name'] + '.rst'
+        request.context.create_doc(name,
                                    conditions['body'])
+    elif filetype == 'src':
+        name = conditions['name']
+        request.context.create_dir(name)
     else:
-        request.context.create_dir(conditions['name'])
+        request.response.status = 400
+        return {}
 
-    return {}
+    link_for_child = request.route_url('api_tree',
+                                       docname=request.matchdict['docname'],
+                                       traverse=request.matchdict['traverse'] + [name])
+
+    request.response.status = 201
+
+    return dict(type=filetype,
+                name=name,
+                link=link_for_child)
 
 
-@view_config(route_name='admin',
+@view_config(route_name='api_tree',
              renderer='json',
-             request_method=['POST'],
+             request_method=['PUT'],
              context='pilotcats.docstore.FileResource')
 def doc_update_view(request):
     schema = pilotcats_schema.DocUpdateSchema()
     try:
-        conditions = schema.deserialize(request.POST)
+        conditions = schema.deserialize(request.PUT)
     except colander.Invalid as e:
         request.response.status = 400
         return dict(errors=e.asdict())
     request.context.update_body(conditions['body'])
+    request.response.status = 204
     return {}
 
 
-@view_config(route_name='admin',
+@view_config(route_name='api_tree',
              renderer='json',
-             request_method=['DELETE'])
-def doc_delete_view(request):
+             request_method=['DELETE'],
+             context='pilotcats.docstore.DirResource')
+def doc_dir_delete_view(request):
     request.context.delete_file()
-    return {}
+    return dict(type='dir')
 
 
-@view_config(route_name='admin',
-             renderer='dirtree.jinja2',
+@view_config(route_name='api_tree',
+             renderer='json',
+             request_method=['DELETE'],
+             context='pilotcats.docstore.FileResource')
+def doc_file_delete_view(request):
+    request.context.delete_file()
+    return dict(type='src')
+
+
+@view_config(route_name='api_tree',
+             renderer='json',
              request_method=['GET'],
              context='pilotcats.docstore.DirResource')
 def tree_view(request):
-    return {}
+    return dict(type='dir',
+                content=list(request.context))
 
 
-@view_config(route_name='admin',
-             renderer='dirfile.jinja2',
+@view_config(route_name='api_tree',
+             renderer='json',
              request_method=['GET'],
              context='pilotcats.docstore.FileResource')
 def file_view(request):
     with request.context as f:
         content = f.read()
-    return dict(content=content)
+    return dict(type='src',
+                content=content)
