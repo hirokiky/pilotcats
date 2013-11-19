@@ -8,20 +8,7 @@
     <title>{% block title %}{% endblock %}</title>
 </head>
 <body>
-{% block relbar1 %}{% endblock %}
-<div class="document">
-    <div class="documentwrapper">
-        <div class="bodywrapper">
-            <div class="body">
-                {% block body %}{% endblock %}
-            </div>
-        </div>
-    </div>
-    {% block sidebar %}{% endblock %}
-    <div class="clearer"></div>
-</div>
-
-{% block relbar2 %}{% endblock %}
+{% block body %}{% endblock %}
 {% block footer %}{% endblock %}
 {% block script %}
 {% endblock %}

@@ -4,32 +4,38 @@
     {{ super() }}
     {{ document.css|safe }}
 {% endblock %}
-{% block relbar1 %}
-    {{ document.relbar|safe }}
-{% endblock %}
+
 {% block body %}
-    {{ document.body|safe }}
-{% endblock %}
-{% block sidebar %}
-    {{ document.sidebar|safe }}
-{% endblock %}
-{% block relbar2 %}
     {{ document.relbar|safe }}
+
+    <div class="document">
+        <div class="documentwrapper">
+            <div class="bodywrapper">
+                <div class="body">
+                    {{ document.body|safe }}
+                </div>
+            </div>
+        </div>
+        {{ document.sidebar|safe }}
+        {% block sidebar %}{% endblock %}
+        {{ document.relbar|safe }}
+        <div class="clearer"></div>
+    </div>
 {% endblock %}
 
 {%- block footer %}
     <div class="footer">
-    {%- if docglobal %}
-    {%- if docglobal.show_copyright %}
-      &copy; Copyright {{ docglobal.copyright }}.
-    {%- endif %}
-    {%- if docglobal.last_updated %}
-      Last updated on {{ docglobal.last_updated }}.
-    {%- endif %}
-    {%- if docglobal.show_sphinx %}
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a>
-      {{ docglobal.sphinx_version }}.
-    {%- endif %}
-    {%- endif %}
+        {%- if docglobal %}
+            {%- if docglobal.show_copyright %}
+                &copy; Copyright {{ docglobal.copyright }}.
+            {%- endif %}
+            {%- if docglobal.last_updated %}
+                Last updated on {{ docglobal.last_updated }}.
+            {%- endif %}
+            {%- if docglobal.show_sphinx %}
+                Created using <a href="http://sphinx.pocoo.org/">Sphinx</a>
+                {{ docglobal.sphinx_version }}.
+            {%- endif %}
+        {%- endif %}
     </div>
 {%- endblock %}
